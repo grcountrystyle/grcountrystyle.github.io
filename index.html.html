@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GR Country Style</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Georgia,serif}
+body{background:#000;color:#d4a017;min-height:100vh}
+.logo-area{text-align:center;padding:20px 0 10px}
+.logo-text{font-size:42px;font-weight:bold;color:#d4a017;letter-spacing:6px}
+.logo-sub{font-size:12px;letter-spacing:8px;color:#a07010;margin-top:4px}
+.nav{background:#000;border-top:3px solid #d4a017;border-bottom:3px solid #d4a017;padding:12px 0;display:flex;justify-content:space-around;align-items:center}
+.nav span{color:#d4a017;font-size:17px;font-weight:bold;cursor:pointer;letter-spacing:2px;padding:4px 0}
+.nav span:hover{color:#fff}
+.nav-active{border-bottom:2px solid #d4a017}
+.section{padding:28px 20px;min-height:70vh}
+
+/* HOME */
+.home-wrap{max-width:700px;margin:0 auto;text-align:center;padding:48px 20px}
+.home-wrap h1{color:#d4a017;font-size:26px;letter-spacing:3px;margin-bottom:14px}
+.home-wrap p{color:#888;font-size:15px;line-height:1.8}
+.btn-catalogo{display:inline-block;margin-top:28px;background:#d4a017;color:#000;font-weight:bold;font-size:15px;letter-spacing:2px;padding:13px 36px;border-radius:4px;cursor:pointer;border:none}
+.btn-catalogo:hover{opacity:.85}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:22px;max-width:1100px;margin:0 auto}
+.card{background:#000;border:2px solid #d4a017;border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 28px #d4a01744}
+.card img{width:100%;height:230px;object-fit:cover;display:block;background:#111}
+.card-placeholder{width:100%;height:230px;background:#0a0a0a;display:flex;align-items:center;justify-content:center}
+.card-info{padding:12px 14px}
+.card-name{font-size:15px;font-weight:bold;color:#d4a017}
+.card-price{font-size:14px;color:#a07010;margin-top:3px}
+.card-sizes{font-size:12px;color:#666;margin-top:3px}
+.add-card{border:2px dashed #d4a017;border-radius:6px;min-height:310px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background .15s}
+.add-card:hover{background:#d4a01711}
+.plus{font-size:56px;color:#d4a017;line-height:1}
+.add-label{font-size:13px;color:#d4a017;margin-top:12px;letter-spacing:2px}
+
+/* MODAL ADICIONAR */
+.modal-bg{display:none;position:fixed;inset:0;background:#000000cc;z-index:100;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#0d0d0d;border:2px solid #d4a017;border-radius:10px;padding:26px;width:92%;max-width:480px;max-height:92vh;overflow-y:auto}
+.modal h2{color:#d4a017;font-size:18px;margin-bottom:18px;letter-spacing:2px}
+.modal label{display:block;font-size:12px;color:#a07010;margin-bottom:4px;margin-top:14px;letter-spacing:1px}
+.modal input,.modal textarea{width:100%;background:#000;border:1px solid #d4a01788;border-radius:4px;color:#d4a017;padding:9px 11px;font-size:14px;outline:none;font-family:Georgia,serif}
+.modal input:focus,.modal textarea:focus{border-color:#d4a017}
+.modal textarea{min-height:64px;resize:vertical}
+.btn-row{display:flex;gap:10px;margin-top:22px}
+.btn{padding:11px 20px;border-radius:4px;font-size:14px;font-weight:bold;cursor:pointer;border:none;letter-spacing:1px;flex:1}
+.btn-primary{background:#d4a017;color:#000}
+.btn-cancel{background:transparent;border:1px solid #d4a017;color:#d4a017}
+.btn:hover{opacity:.85}
+.img-preview{width:100%;height:150px;object-fit:contain;border-radius:4px;background:#111;margin-top:8px;display:none}
+
+/* MODAL DETALHE */
+.detail-bg{display:none;position:fixed;inset:0;background:#000000ee;z-index:200;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px}
+.detail-bg.open{display:flex}
+.detail{background:#0d0d0d;border:2px solid #d4a017;border-radius:10px;padding:26px;width:92%;max-width:560px;margin:auto;position:relative}
+.detail img{width:100%;max-height:360px;object-fit:contain;border-radius:6px;background:#111;margin-bottom:18px}
+.detail h2{color:#d4a017;font-size:22px;margin-bottom:6px}
+.d-price{font-size:20px;color:#a07010;margin-bottom:10px;font-weight:bold}
+.d-desc{font-size:14px;color:#aaa;line-height:1.7;margin-bottom:14px}
+.tag-label{color:#a07010;font-size:12px;letter-spacing:1px;margin-bottom:5px}
+.tag{display:inline-block;background:#d4a01722;border:1px solid #d4a01766;color:#d4a017;border-radius:20px;font-size:12px;padding:4px 12px;margin:2px}
+.close-btn{position:absolute;top:14px;right:18px;font-size:24px;color:#d4a017;cursor:pointer;background:none;border:none;line-height:1}
+.wpp-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#25d366;color:#fff;border:none;border-radius:6px;padding:14px 20px;font-size:15px;font-weight:bold;cursor:pointer;width:100%;margin-top:14px;text-decoration:none}
+.wpp-btn:hover{background:#1ebe5d}
+.del-btn{background:transparent;border:1px solid #7a2020;color:#a03030;border-radius:4px;padding:7px 16px;font-size:12px;cursor:pointer;margin-top:10px;display:block;width:100%}
+.del-btn:hover{background:#a0302022}
+
+/* CONTATO */
+.contact-wrap{max-width:500px;margin:0 auto;padding:40px 20px;text-align:center}
+.contact-wrap h2{color:#d4a017;font-size:22px;letter-spacing:3px;margin-bottom:24px}
+.contact-info{color:#aaa;font-size:15px;margin-bottom:12px}
+.contact-info strong{color:#d4a017}
+.config-box{background:#0d0d0d;border:1px solid #d4a01744;border-radius:8px;padding:20px;margin-top:28px;text-align:left}
+.config-box h3{color:#a07010;font-size:13px;letter-spacing:2px;margin-bottom:12px}
+.config-row{display:flex;gap:8px;margin-bottom:8px}
+.config-row input{flex:1;background:#000;border:1px solid #d4a01766;border-radius:4px;color:#d4a017;padding:9px 11px;font-size:14px;outline:none;font-family:Georgia,serif}
+.config-row input:focus{border-color:#d4a017}
+.config-hint{font-size:11px;color:#555;margin-top:4px}
+.btn-save{background:#d4a017;color:#000;border:none;border-radius:4px;padding:9px 18px;font-weight:bold;cursor:pointer;font-size:14px}
+.btn-save:hover{opacity:.85}
+.saved-msg{color:#25d366;font-size:13px;margin-top:8px;display:none}
+</style>
+</head>
+<body>
+
+<div class="logo-area">
+  <div class="logo-text">GR</div>
+  <div class="logo-sub">★ COUNTRY STYLE ★</div>
+</div>
+
+<nav class="nav">
+  <span onclick="showPage('home')" id="nav-home" class="nav-active">HOME</span>
+  <span onclick="showPage('catalogo')" id="nav-catalogo">CATÁLOGO</span>
+  <span onclick="showPage('contato')" id="nav-contato">CONTATO</span>
+</nav>
+
+<!-- HOME -->
+<div id="page-home" class="section">
+  <div class="home-wrap">
+    <h1>BEM-VINDO À GR COUNTRY STYLE</h1>
+    <p>Moda country autêntica com estilo e qualidade.<br>Confira nosso catálogo e encontre o look perfeito para o seu estilo!</p>
+    <button class="btn-catalogo" onclick="showPage('catalogo')">VER CATÁLOGO</button>
+  </div>
+</div>
+
+<!-- CATÁLOGO -->
+<div id="page-catalogo" class="section" style="display:none">
+  <div class="grid" id="product-grid"></div>
+</div>
+
+<!-- CONTATO -->
+<div id="page-contato" class="section" style="display:none">
+  <div class="contact-wrap">
+    <h2>CONTATO</h2>
+    <p class="contact-info">WhatsApp: <strong id="wpp-display">—</strong></p>
+    <p class="contact-info">Instagram: <strong id="ig-display">@grcountrystyle</strong></p>
+    <div class="config-box">
+      <h3>⚙ CONFIGURAR WHATSAPP</h3>
+      <div class="config-row">
+        <input id="wpp-input" placeholder="5531999999999" type="tel">
+        <button class="btn-save" onclick="saveWpp()">Salvar</button>
+      </div>
+      <div class="config-hint">Formato: 55 + DDD + número (só números, sem espaço ou +)<br>Exemplo: 5531987654321</div>
+      <div id="saved-msg" class="saved-msg">✓ WhatsApp salvo com sucesso!</div>
+
+      <h3 style="margin-top:20px">⚙ CONFIGURAR INSTAGRAM</h3>
+      <div class="config-row">
+        <input id="ig-input" placeholder="@grcountrystyle">
+        <button class="btn-save" onclick="saveIg()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ADICIONAR PRODUTO -->
+<div class="modal-bg" id="add-modal">
+  <div class="modal">
+    <h2>➕ ADICIONAR PRODUTO</h2>
+    <label>FOTO DO PRODUTO</label>
+    <input type="file" id="prod-img" accept="image/*" onchange="previewImg(this)">
+    <img id="img-preview" class="img-preview" alt="preview">
+    <label>NOME DO PRODUTO *</label>
+    <input id="prod-name" placeholder="Ex: Chapéu Cowboy Premium">
+    <label>PREÇO (R$)</label>
+    <input id="prod-price" placeholder="Ex: 189,90">
+    <label>TAMANHOS DISPONÍVEIS</label>
+    <input id="prod-sizes" placeholder="Ex: P, M, G, GG  ou  35, 36, 37, 38">
+    <label>CORES DISPONÍVEIS</label>
+    <input id="prod-colors" placeholder="Ex: Preto, Marrom, Bege">
+    <label>DESCRIÇÃO</label>
+    <textarea id="prod-desc" placeholder="Ex: Chapéu de couro legítimo, aba larga, ideal para rodeios e festas country..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="addProduct()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DETALHE DO PRODUTO -->
+<div class="detail-bg" id="detail-modal">
+  <div class="detail">
+    <button class="close-btn" onclick="closeDetail()">✕</button>
+    <img id="d-img" src="" alt="" style="display:none">
+    <h2 id="d-name"></h2>
+    <div class="d-price" id="d-price"></div>
+    <div class="d-desc" id="d-desc"></div>
+    <div id="d-sizes" style="margin-bottom:10px"></div>
+    <div id="d-colors" style="margin-bottom:10px"></div>
+    <a id="d-wpp" class="wpp-btn" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.122 1.526 5.859L0 24l6.305-1.654A11.938 11.938 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.373l-.36-.213-3.727.977.994-3.63-.234-.373A9.77 9.77 0 012.182 12c0-5.42 4.398-9.818 9.818-9.818 5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818z"/></svg>
+      Pedir pelo WhatsApp
+    </a>
+    <button class="del-btn" onclick="deleteProduct()">🗑 Remover este produto</button>
+  </div>
+</div>
+
+<script>
+  let products = [];
+  let wppNumber = '';
+  let igHandle = '@grcountrystyle';
+  let currentDetail = null;
+
+  try { products = JSON.parse(localStorage.getItem('gr_products') || '[]'); } catch(e){}
+  try { wppNumber = localStorage.getItem('gr_wpp') || ''; } catch(e){}
+  try { igHandle = localStorage.getItem('gr_ig') || '@grcountrystyle'; } catch(e){}
+
+  function saveData() {
+    try { localStorage.setItem('gr_products', JSON.stringify(products)); } catch(e){}
+  }
+
+  function showPage(p) {
+    ['home','catalogo','contato'].forEach(pg => {
+      document.getElementById('page-'+pg).style.display = pg===p ? '' : 'none';
+      document.getElementById('nav-'+pg).classList.toggle('nav-active', pg===p);
+    });
+    if(p === 'catalogo') renderGrid();
+    if(p === 'contato') {
+      document.getElementById('wpp-display').textContent = wppNumber || '—';
+      document.getElementById('ig-display').textContent = igHandle;
+      document.getElementById('wpp-input').value = wppNumber;
+      document.getElementById('ig-input').value = igHandle;
+    }
+  }
+
+  function saveWpp() {
+    wppNumber = document.getElementById('wpp-input').value.trim().replace(/\D/g,'');
+    try { localStorage.setItem('gr_wpp', wppNumber); } catch(e){}
+    document.getElementById('wpp-display').textContent = wppNumber || '—';
+    const msg = document.getElementById('saved-msg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  }
+
+  function saveIg() {
+    igHandle = document.getElementById('ig-input').value.trim();
+    try { localStorage.setItem('gr_ig', igHandle); } catch(e){}
+    document.getElementById('ig-display').textContent = igHandle;
+    alert('Instagram salvo!');
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = '';
+    products.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.onclick = () => openDetail(i);
+      if(p.img) {
+        card.innerHTML = `<img src="${p.img}" alt="${p.name}">`;
+      } else {
+        card.innerHTML = `<div class="card-placeholder"><svg width="52" height="52" viewBox="0 0 24 24" fill="#d4a01733"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></div>`;
+      }
+      card.innerHTML += `<div class="card-info"><div class="card-name">${p.name}</div>${p.price ? `<div class="card-price">R$ ${p.price}</div>` : ''}<div class="card-sizes">${p.sizes||''}</div></div>`;
+      grid.appendChild(card);
+    });
+    const addCard = document.createElement('div');
+    addCard.className = 'add-card';
+    addCard.onclick = openModal;
+    addCard.innerHTML = `<div class="plus">+</div><div class="add-label">ADICIONAR PRODUTO</div>`;
+    grid.appendChild(addCard);
+  }
+
+  function openModal() { document.getElementById('add-modal').classList.add('open'); }
+
+  function closeModal() {
+    document.getElementById('add-modal').classList.remove('open');
+    ['prod-name','prod-price','prod-sizes','prod-colors','prod-desc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('prod-img').value = '';
+    const prev = document.getElementById('img-preview');
+    prev.style.display = 'none'; prev.src = '';
+  }
+
+  function previewImg(input) {
+    if(!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const el = document.getElementById('img-preview');
+      el.src = e.target.result;
+      el.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+
+  function addProduct() {
+    const name = document.getElementById('prod-name').value.trim();
+    if(!name) { alert('Por favor, coloque o nome do produto!'); return; }
+    const prev = document.getElementById('img-preview');
+    const prod = {
+      name,
+      price: document.getElementById('prod-price').value.trim(),
+      sizes: document.getElementById('prod-sizes').value.trim(),
+      colors: document.getElementById('prod-colors').value.trim(),
+      desc: document.getElementById('prod-desc').value.trim(),
+      img: prev.style.display !== 'none' ? prev.src : ''
+    };
+    products.push(prod);
+    saveData();
+    closeModal();
+    renderGrid();
+  }
+
+  function openDetail(i) {
+    currentDetail = i;
+    const p = products[i];
+    const dimg = document.getElementById('d-img');
+    if(p.img) { dimg.src = p.img; dimg.style.display = 'block'; }
+    else { dimg.style.display = 'none'; dimg.src = ''; }
+    document.getElementById('d-name').textContent = p.name;
+    document.getElementById('d-price').textContent = p.price ? 'R$ ' + p.price : '';
+    document.getElementById('d-desc').textContent = p.desc || '';
+    const sd = document.getElementById('d-sizes');
+    sd.innerHTML = p.sizes ? `<div class="tag-label">TAMANHOS</div>${p.sizes.split(',').map(s=>`<span class="tag">${s.trim()}</span>`).join('')}` : '';
+    const cd = document.getElementById('d-colors');
+    cd.innerHTML = p.colors ? `<div class="tag-label" style="margin-top:8px">CORES</div>${p.colors.split(',').map(c=>`<span class="tag">${c.trim()}</span>`).join('')}` : '';
+    const msg = encodeURIComponent(`Olá! Vi o produto *${p.name}* no catálogo da GR Country Style e tenho interesse!\nValor: R$ ${p.price}`);
+    document.getElementById('d-wpp').href = wppNumber ? `https://wa.me/${wppNumber}?text=${msg}` : '#';
+    document.getElementById('detail-modal').classList.add('open');
+  }
+
+  function closeDetail() { document.getElementById('detail-modal').classList.remove('open'); }
+
+  function deleteProduct() {
+    if(!confirm('Tem certeza que quer remover este produto?')) return;
+    products.splice(currentDetail, 1);
+    saveData();
+    closeDetail();
+    renderGrid();
+  }
+
+  renderGrid();
+</script>
+</body>
+</html>
